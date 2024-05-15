@@ -1,8 +1,17 @@
+'use client'
+
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { useForm } from 'react-hook-form'
 
 export function AuthForm() {
+  const form = useForm()
+
+  const handleSubmit = form.handleSubmit((data) => {
+    console.log(data)
+  })
+
   return (
     <div className="flex h-screen w-full items-center justify-center bg-gray-100 px-4 dark:bg-gray-950">
       <div className="mx-auto max-w-md space-y-6">
@@ -14,12 +23,13 @@ export function AuthForm() {
             Enter your email below and we will send you a magic link to sign in.
           </p>
         </div>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <Label className="sr-only" htmlFor="email">
               Email
             </Label>
             <Input
+              {...form.register('email')}
               id="email"
               placeholder="m@example.com"
               required
