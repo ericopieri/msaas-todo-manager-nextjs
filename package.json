@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.1.0",
     "@hookform/resolvers": "^3.4.0",
     "@prisma/client": "5.14.0",
     "@radix-ui/react-accordion": "^1.1.2",
@@ -44,10 +45,12 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.0.4",
+    "fs": "0.0.1-security",
     "input-otp": "^1.2.4",
     "next": "14.2.3",
     "next-auth": "5.0.0-beta.18",
     "next-themes": "^0.3.0",
+    "nodemailer": "^6.9.13",
     "react": "^18",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
