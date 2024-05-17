@@ -1,20 +1,26 @@
 'use client'
 
-import {
-  Sidebar,
-  SiderbarHeader,
-  SiderbarContent,
-  SidebarNav,
-  SidebarNavContent,
-  SidebarNavLink,
-  SidebarNavHeader,
-  SidebarNavHeaderTitle,
-  SiderbarFooter,
-} from '@/components/dashboard/sidebar'
 import { HomeIcon, MixerVerticalIcon } from '@radix-ui/react-icons'
 import { usePathname } from 'next/navigation'
+import { UserDropdown, UserDropdownProps } from './user-dropdown'
+import Logo from '@/components/logo'
+import {
+  DashboardSidebarNavContent,
+  DashboardSidebarNavLink,
+  DashboardSidebarFooter,
+  DashboardSidebar,
+  DashboardSidebarHeader,
+  DashboardSidebarContent,
+  DashboardSidebarNav,
+  DashboardSidebarNavHeader,
+  DashboardSidebarNavHeaderTitle,
+} from '@/components/dashboard/dashboard-sidebar'
 
-export default function MainSidebar() {
+export type MainDashboardSidebarProps = UserDropdownProps
+
+export default function MainDashboardSidebar({
+  user,
+}: MainDashboardSidebarProps) {
   const pathname = usePathname()
 
   const isActive = (path: string) => {
@@ -22,40 +28,46 @@ export default function MainSidebar() {
   }
 
   return (
-    <Sidebar>
-      <SiderbarHeader>
-        <h1></h1>
-      </SiderbarHeader>
+    <DashboardSidebar>
+      <DashboardSidebarHeader>
+        <Logo />
+      </DashboardSidebarHeader>
 
-      <SiderbarContent className="flex flex-col flex-grow">
-        <SidebarNav>
-          <SidebarNavContent>
-            <SidebarNavLink href="/app" active={isActive('/app')}>
+      <DashboardSidebarContent className="flex flex-col flex-grow">
+        <DashboardSidebarNav>
+          <DashboardSidebarNavContent>
+            <DashboardSidebarNavLink href="/app" active={isActive('/app')}>
               <HomeIcon className="w-5 h-5 mr-3" />
               Tarefas
-            </SidebarNavLink>
-            <SidebarNavLink
+            </DashboardSidebarNavLink>
+            <DashboardSidebarNavLink
               href="/app/settings"
               active={isActive('/app/settings')}
             >
               <MixerVerticalIcon className="w-5 h-5 mr-3" />
               Configurações
-            </SidebarNavLink>
-          </SidebarNavContent>
-        </SidebarNav>
+            </DashboardSidebarNavLink>
+          </DashboardSidebarNavContent>
+        </DashboardSidebarNav>
 
-        <SidebarNav className="mt-auto">
-          <SidebarNavHeader>
-            <SidebarNavHeaderTitle>Links extras</SidebarNavHeaderTitle>
-          </SidebarNavHeader>
-          <SidebarNavContent>
-            <SidebarNavLink href="/">Precisa de ajuda?</SidebarNavLink>
-            <SidebarNavLink href="/">Site</SidebarNavLink>
-          </SidebarNavContent>
-        </SidebarNav>
-      </SiderbarContent>
+        <DashboardSidebarNav className="mt-auto">
+          <DashboardSidebarNavHeader>
+            <DashboardSidebarNavHeaderTitle>
+              Links extras
+            </DashboardSidebarNavHeaderTitle>
+          </DashboardSidebarNavHeader>
+          <DashboardSidebarNavContent>
+            <DashboardSidebarNavLink href="/">
+              Precisa de ajuda?
+            </DashboardSidebarNavLink>
+            <DashboardSidebarNavLink href="/">Site</DashboardSidebarNavLink>
+          </DashboardSidebarNavContent>
+        </DashboardSidebarNav>
+      </DashboardSidebarContent>
 
-      <SiderbarFooter>User</SiderbarFooter>
-    </Sidebar>
+      <DashboardSidebarFooter>
+        <UserDropdown user={user} />
+      </DashboardSidebarFooter>
+    </DashboardSidebar>
   )
 }
