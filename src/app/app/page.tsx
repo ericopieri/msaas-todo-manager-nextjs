@@ -1,19 +1,14 @@
-import {
-  DashboardPage,
-  DashboardPageContent,
-  DashboardPageHeader,
-  DashboardPageHeaderTitle,
-} from '@/components/dashboard/dashboard-page'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 
 export default function Page() {
   return (
-    <DashboardPage>
-      <DashboardPageHeader>
-        <DashboardPageHeaderTitle>Tarefas</DashboardPageHeaderTitle>
-      </DashboardPageHeader>
-      <DashboardPageContent>
+    <DashboardPage.Root>
+      <DashboardPage.Header>
+        <DashboardPage.HeaderTitle>Tarefas</DashboardPage.HeaderTitle>
+      </DashboardPage.Header>
+      <DashboardPage.Content>
         <h1>Tarefas</h1>
-      </DashboardPageContent>
-    </DashboardPage>
+      </DashboardPage.Content>
+    </DashboardPage.Root>
   )
 }

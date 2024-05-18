@@ -1,19 +1,14 @@
-import {
-  DashboardPage,
-  DashboardPageHeader,
-  DashboardPageHeaderTitle,
-  DashboardPageContent,
-} from '@/components/dashboard/dashboard-page'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 
 export default function Settings() {
   return (
-    <DashboardPage>
-      <DashboardPageHeader>
-        <DashboardPageHeaderTitle>Configurações</DashboardPageHeaderTitle>
-      </DashboardPageHeader>
-      <DashboardPageContent>
+    <DashboardPage.Root>
+      <DashboardPage.Header>
+        <DashboardPage.HeaderTitle>Configurações</DashboardPage.HeaderTitle>
+      </DashboardPage.Header>
+      <DashboardPage.Content>
         <h1>Configurações</h1>
-      </DashboardPageContent>
-    </DashboardPage>
+      </DashboardPage.Content>
+    </DashboardPage.Root>
   )
 }
