@@ -10,9 +10,11 @@ import { toast } from '@/components/ui/use-toast'
 export function AuthForm() {
   const form = useForm()
 
-  const handleSubmit = form.handleSubmit(async (data) => {
+  const handleSubmit = form.handleSubmit(async (data, event) => {
+    event?.preventDefault()
+
     try {
-      await signIn('email', {
+      await signIn('nodemailer', {
         email: data.email,
         redirect: false,
       })
@@ -55,8 +57,12 @@ export function AuthForm() {
               type="email"
             />
           </div>
-          <Button className="w-full" type="submit">
-            Send Magic Link
+          <Button
+            className="w-full"
+            type="submit"
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting ? 'Sending...' : 'Send Magic Link'}
           </Button>
         </form>
       </div>
