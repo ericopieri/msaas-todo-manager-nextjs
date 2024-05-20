@@ -133,6 +133,17 @@ export function TodoDataTable({ data }: TodoDataTableProps) {
       },
     },
     {
+      accessorKey: 'doneAt',
+      header: () => <div>Concluido em</div>,
+      cell: ({ row }) => {
+        const date = row.original.doneAt
+          ? format(new Date(row.original.doneAt), 'P', { locale: ptBR })
+          : ''
+
+        return <div className="font-medium">{date}</div>
+      },
+    },
+    {
       id: 'actions',
       enableHiding: false,
       cell: ({ row }) => {
