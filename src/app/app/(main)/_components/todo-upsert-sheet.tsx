@@ -11,8 +11,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { Todo } from './todo-data-table'
-import { useRef } from 'react'
+
+import React, { useRef } from 'react'
 import {
   Form,
   FormField,
@@ -23,6 +23,12 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
+import { upsertToDo } from '../actions'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { upsertTodoSchema } from '../schema'
+import { Todo } from '../types'
+import { useRouter } from 'next/navigation'
+import { toast } from '@/components/ui/use-toast'
 
 export type TodoUpsertSheetProps = {
   children?: React.ReactNode
@@ -31,11 +37,24 @@ export type TodoUpsertSheetProps = {
 
 export function TodoUpsertSheet({ children }: TodoUpsertSheetProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const router = useRouter()
 
-  const form = useForm()
+  const form = useForm({
+    resolver: zodResolver(upsertTodoSchema),
+  })
 
-  const onSubmit = form.handleSubmit((data) => {
-    console.log(data)
+  const onSubmit = form.handleSubmit(async (data) => {
+    await upsertToDo(data)
+
+    router.refresh()
+
+    ref.current?.click()
+
+    toast({
+      duration: 5000,
+      title: 'Success!',
+      description: 'Todo successfully created!',
+    })
   })
 
   return (

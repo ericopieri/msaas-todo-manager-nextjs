@@ -120,7 +120,7 @@ export type TodoDataTableProps = {
   data: Todo[]
 }
 
-export async function TodoDataTable({ data }: TodoDataTableProps) {
+export function TodoDataTable({ data }: TodoDataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
