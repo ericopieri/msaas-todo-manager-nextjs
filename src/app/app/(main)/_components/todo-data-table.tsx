@@ -39,88 +39,17 @@ import { ptBR } from 'date-fns/locale'
 import { Badge } from '@/components/ui/badge'
 
 import { Todo } from '../types'
-
-export const columns: ColumnDef<Todo>[] = [
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => {
-      const { doneAt } = row.original
-
-      const status = doneAt ? 'Done' : 'Pending...'
-
-      return (
-        <div className="capitalize">
-          <Badge variant={status === 'Done' ? 'default' : 'secondary'}>
-            {status}
-          </Badge>
-        </div>
-      )
-    },
-  },
-  {
-    accessorKey: 'title',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="link"
-          className="!w-fit !px-0"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Title
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div>{row.getValue('title')}</div>,
-  },
-  {
-    accessorKey: 'createdAt',
-    header: () => <div>Criado em</div>,
-    cell: ({ row }) => {
-      const date = format(new Date(row.original.createdAt), 'P', {
-        locale: ptBR,
-      })
-
-      return <div className="font-medium">{date}</div>
-    },
-  },
-  {
-    id: 'actions',
-    enableHiding: false,
-    cell: ({ row }) => {
-      const todo = row.original
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="link" className="h-8 !w-fit !px-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(todo.id)}
-            >
-              Copy ToDo ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Mark as Done</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
-  },
-]
+import { deleteTodo, upsertToDo } from '../actions'
+import { useRouter } from 'next/navigation'
+import { toast } from '@/components/ui/use-toast'
 
 export type TodoDataTableProps = {
   data: Todo[]
 }
 
 export function TodoDataTable({ data }: TodoDataTableProps) {
+  const router = useRouter()
+
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -128,6 +57,115 @@ export function TodoDataTable({ data }: TodoDataTableProps) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
+
+  const onHandleDelete = async ({ id }: Todo) => {
+    await deleteTodo({ id })
+
+    router.refresh()
+
+    toast({
+      duration: 5000,
+      title: 'Deleted!',
+      description: 'Todo successfully deleted.',
+    })
+  }
+
+  const onHandleToggleDone = async ({ id, doneAt }: Todo) => {
+    const newDoneAt = doneAt ? null : new Date()
+
+    await upsertToDo({
+      id,
+      doneAt: newDoneAt,
+    })
+
+    router.refresh()
+
+    toast({
+      duration: 5000,
+      title: 'Status Updated!',
+      description: `Todo ${newDoneAt ? 'completed' : 'pending'} successfully.`,
+    })
+  }
+
+  const columns: ColumnDef<Todo>[] = [
+    {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row }) => {
+        const { doneAt } = row.original
+
+        const status = doneAt ? 'Done' : 'Pending...'
+
+        return (
+          <div className="capitalize">
+            <Badge variant={status === 'Done' ? 'default' : 'secondary'}>
+              {status}
+            </Badge>
+          </div>
+        )
+      },
+    },
+    {
+      accessorKey: 'title',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="link"
+            className="!w-fit !px-0"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Title
+            <CaretSortIcon className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => <div>{row.getValue('title')}</div>,
+    },
+    {
+      accessorKey: 'createdAt',
+      header: () => <div>Criado em</div>,
+      cell: ({ row }) => {
+        const date = format(new Date(row.original.createdAt), 'P', {
+          locale: ptBR,
+        })
+
+        return <div className="font-medium">{date}</div>
+      },
+    },
+    {
+      id: 'actions',
+      enableHiding: false,
+      cell: ({ row }) => {
+        const todo = row.original
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="link" className="h-8 !w-fit !px-0">
+                <span className="sr-only">Open menu</span>
+                <DotsHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(todo.id)}
+              >
+                Copy ToDo ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => onHandleToggleDone(todo)}>
+                Mark as Done
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onHandleDelete(todo)}>
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      },
+    },
+  ]
 
   const table = useReactTable({
     data,

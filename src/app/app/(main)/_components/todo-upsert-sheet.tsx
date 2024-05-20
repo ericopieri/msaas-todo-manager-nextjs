@@ -53,7 +53,7 @@ export function TodoUpsertSheet({ children }: TodoUpsertSheetProps) {
     toast({
       duration: 5000,
       title: 'Success!',
-      description: 'Todo successfully created!',
+      description: 'Todo successfully created.',
     })
   })
 

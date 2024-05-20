@@ -2,7 +2,7 @@
 
 import { auth } from '@/services/auth'
 import { prisma } from '@/services/database'
-import { UpsertTodoType } from './schema'
+import { DeleteTodoType, UpsertTodoType } from './schema'
 
 export async function getUserTodos() {
   const session = await auth()
@@ -91,6 +91,38 @@ export async function upsertToDo({ title, id, doneAt }: UpsertTodoType) {
   } catch (err) {
     return {
       error: 'An error has occurred during the creation of a ToDo.',
+      data: null,
+    }
+  }
+}
+export async function deleteTodo({ id }: DeleteTodoType) {
+  try {
+    const todo = await prisma.todo.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (!todo) {
+      return {
+        error: 'ToDo not found.',
+        data: null,
+      }
+    }
+
+    await prisma.todo.delete({
+      where: {
+        id,
+      },
+    })
+
+    return {
+      error: null,
+      data: 'Todo successfully deleted.',
+    }
+  } catch (err) {
+    return {
+      error: 'An error has occurred during the deletion of a ToDo.',
       data: null,
     }
   }
