@@ -17,8 +17,6 @@ export default function MainDashboardSidebar({
     return pathname === path
   }
 
-  console.log(DashboardSidebar)
-
   return (
     <DashboardSidebar.Root>
       <DashboardSidebar.Header>
