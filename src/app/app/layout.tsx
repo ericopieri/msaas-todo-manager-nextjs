@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react'
+import React, { PropsWithChildren } from 'react'
 import MainSidebar from './_components/main-sidebar'
 import { auth } from '@/services/auth'
 
@@ -6,6 +6,8 @@ export default async function Layout({ children }: PropsWithChildren) {
   const session = await auth()
 
   const user = session?.user
+
+  console.log(user)
 
   return (
     <div className="grid grid-cols-[20rem_1fr] h-screen">

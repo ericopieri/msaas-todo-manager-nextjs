@@ -14,14 +14,10 @@ import {
   MixerVerticalIcon,
   RocketIcon,
 } from '@radix-ui/react-icons'
-import { Session } from 'next-auth'
 import { signOut } from 'next-auth/react'
+import { PropsWithUser } from '../types'
 
-export type UserDropdownProps = {
-  user: Session['user']
-}
-
-export function UserDropdown({ user }: UserDropdownProps) {
+export function UserDropdown({ user }: PropsWithUser) {
   if (!user) return
 
   return (
